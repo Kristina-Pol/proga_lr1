@@ -1,0 +1,81 @@
+import json
+
+class Speed_Error(Exception):
+    def __str__(self):
+        return 'недопустимая скорость'
+        
+class Fly_Error(Exception):
+    def __str__(self):
+        return 'недопустимая высота'
+
+
+
+
+def readJS(filename):
+    with open(filename, 'r') as file:
+        return json.load(file)
+
+class Vehicle:
+    def __init__(self, brand, color):
+        self.brand = brand
+        self.color = color
+    def fprint(self):
+        print('brand:', self.brand, 'color: ', self.color)
+        
+        
+class Car(Vehicle):
+    def __init__(self, brand, color, num_of_doors, max_speed):
+        super().__init__(brand, color) #вызов конст род класса
+        self.num_of_doors = num_of_doors
+        if 0 <= max_speed <= 509:
+            self.max_speed = max_speed
+        else:
+            raise Speed_Error()
+    def fprint(self):
+        super().fprint()
+        print('num_of_doors: ', self.num_of_doors, 'max_speed: ', self.max_speed)
+
+        
+class Helekopter(Vehicle):
+    def __init__(self,brand, color, max_flight_altitude):
+        super().__init__(brand, color)
+        if 0 <= max_flight_altitude <= 6:
+            self.max_flight_altitude = max_flight_altitude
+        else:
+            raise Fly_Error()
+    def fprint(self):
+        super().fprint()
+        print('max_flight_altitude: ', self.max_flight_altitude)
+        
+
+def readJS(filename):
+    with open(filename, 'r') as file:
+        return json.load(file)
+
+def WriteJS(data,filename):
+    data = json.dumps(data)
+    data = json.loads(str(data))
+    with open(filename, 'w') as file: 
+        json.dump(data, file)
+
+
+bd = {
+      "Vehicle" : []
+     }
+
+    
+papa = readJS('лр1.json')
+mama = Car(papa['Vehicle'][0]['brand'],papa['Vehicle'][0]['color'],papa['Vehicle'][0]['num_of_doors'],papa['Vehicle'][0]['max_speed'])
+mama.fprint()
+
+       
+test1 = Car('b', 'c', 4, 100)
+test2 = Helekopter('b2', 'c2', 8)
+
+list_test = [test1, test2]
+
+
+
+for i in range(len(list_test)):
+    bd['Vehicle'].append(list_test[i].__dict__)
+WriteJS(bd, 'лр1.json')
